@@ -178,7 +178,11 @@ module Rack
       #     ...
       #     res.body.should == "foo!"
       #   end
-      super.join
+      b = ""
+      super.each do |part|
+        b << part
+      end
+      b
     end
 
     def empty?

@@ -262,4 +262,11 @@ describe Rack::Response do
     res.close
     res.body.should.be.closed
   end
+
+  it "calls close on body passed in initialize" do
+    b = StringIO.new
+    res = Rack::Response.new(b)
+    res.close
+    b.should.be.closed
+  end
 end
