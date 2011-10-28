@@ -62,6 +62,8 @@ module Rack
       @options.merge!(opts)
     end
 
+    alias_method :option, :options
+
     # Specifies a middleware to use in a stack.
     #
     #   class Middleware
