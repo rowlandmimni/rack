@@ -37,8 +37,10 @@ module Rack
           options = opts.parse! $1.split(/\s+/)
         end
         cfgfile.sub!(/^__END__\n.*\Z/m, '')
-        app = eval "Rack::Builder.new {\n" + cfgfile + "\n}.to_app",
+        builder = eval "Rack::Builder.new {\n" + cfgfile + "\n}",
           TOPLEVEL_BINDING, config
+        options.merge!(builder.options)
+        app = builder.to_app
       else
         require config
         app = Object.const_get(::File.basename(config, '.rb').capitalize)
@@ -53,6 +55,11 @@ module Rack
 
     def self.app(default_app = nil, &block)
       self.new(default_app, &block).to_app
+    end
+
+    def options(opts={})
+      @options ||={}
+      @options.merge!(opts)
     end
 
     # Specifies a middleware to use in a stack.
